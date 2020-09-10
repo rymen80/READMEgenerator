@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+
 const questions = [
     {
         type: 'input',
@@ -10,12 +11,12 @@ const questions = [
         type: 'input',
         name: 'title',
         message: 'What is your project title? ',
-    }
+    },
     {
         type: 'input',
         name: 'description',
         message: 'Please give a brief description of our project:  ',
-    }
+    },
     {
         type: 'input',
         name: 'tableOfContents',
@@ -41,27 +42,31 @@ const questions = [
         type: 'input',
         name: 'contributors',
         message: 'Who contributed to this project?',
-    },
-
-
-
-];
-
-
-inquirer.prompt(questions);
-fs.writeFile("README.md", "utf8", function(err, data) {
-    if (err) {
-        throw err;
     }
-function writeToFile(fileName, data) {
-}
+    ];
 
-function init() {
-writeToFile(README.md,)
 
-}
+inquirer.prompt(questions).then(answers => {
+    fs.writeFile(`${answers.title}.json`, JSON.stringify(answers,null,2), (err) => {
+        if (err) {
+            throw new Error(err);
+        }
+        console.log('Successfully created')
+    });
+});
 
-init();
+//     function writeToFile(fileName, data) {
+//     }
+//
+//     function init() {
+//         writeToFile(README.md,)
+//
+//     }
+//
+// });
+//
+// init();
+
 
 
 
