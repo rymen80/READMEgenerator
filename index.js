@@ -4,7 +4,7 @@ const util = require('util');
 const axios = require('axios');
 
 const writeFileAsync = util.promisify(fs.writeFile);
-const appendFileAsync = util.promisify(fs.appendFile);
+
 
 const questions = [
     {
@@ -20,7 +20,7 @@ const questions = [
     {
         type: 'input',
         name: 'description',
-        message: 'Please give a brief description of our project:  ',
+        message: 'Please give a brief description of your project:  ',
     },
     {
         type: 'input',
@@ -42,7 +42,7 @@ const questions = [
         type: 'input',
         name: 'contributors',
         message: 'Who contributed to this project?',
-    }
+    },
     {
         type: 'input',
         name: 'test',
@@ -52,15 +52,27 @@ const questions = [
 
 
 inquirer.prompt(questions).then(function (answers) {
-    const md = generateMarkDown(answers);
-    console.log(answers)
-    writeFileAsync("README.md", md);
+    // const md = generateMarkDown(answers);
+
+
     axios.get(
-        `https://api.github.com/users/${answers.github}`
+        `https://api.github.com/users/${answers.gitHubUserName}`
     ).then(function (results) {
-        console.log(results);
-        const appendMD = appendContact(results)
-        appendFileAsync("README.md", appendMD)
+        console.log(results.data)
+        const avatar_url = results.data.avatar_url
+        const email = results.data.email
+        answers.gitHub = {avatar_url:avatar_url,email:email}
+        console.log(answers);
+        const md = generateMarkDown(answers);
+
+        const newMd = appendContact(answers.gitHub);
+        console.log(md + newMd);
+        writeFileAsync("README.md",md + newMd);
+
+
+
+        // const appendMD = appendContact(results)
+        // appendFileAsync("README.md", appendMD)
     })
 })
     .catch(err => { console.log(err);}
@@ -68,6 +80,7 @@ inquirer.prompt(questions).then(function (answers) {
 
 function generateMarkDown(answers) {
     return `
+
  # ${answers.title}  
  
  
@@ -82,15 +95,15 @@ ${answers.description}
 5. [Tests](#tests)
 6. [Contact](#contact)
 
-<a name="installation"></a>
+### install
 ${answers.install}
-<a name="Usage"></a>
+### usage
 ${answers.Usage}
-<a name="license"></a>
+### license
 ${answers.license}
-<a name="contributors"></a>
+### contributors
 ${answers.contributors}
-<a name="tests"></a>
+### tests
 ${answers.test}`
 };
 
@@ -98,8 +111,8 @@ function appendContact(results) {
     return `
 <a name="contact"></a>
 ## Contact
-![Profile picture](${results.data.avatar_url})
-[Email me @ ${results.data.email}]`
+![Profile picture](${results.avatar_url})
+[Email me @ ${results.email}]`
 };
 
 
