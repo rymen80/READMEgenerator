@@ -1,10 +1,10 @@
 
 
- # README generator  
+ # README Generator  
  
  
 ## Description
-a program that creates a README.md file based off of user answered questions.
+Writes a readme.md file in node
 
 ## Table of Contents
 1. [Installation](#install)
@@ -15,15 +15,17 @@ a program that creates a README.md file based off of user answered questions.
 6. [Contact](#contact)
 
 ### install
-must have node installed
+```
+npm i
+```    
 ### usage
-nmp i
+must have node installed on machine
 ### license
 no license
 ### contributors
-Ryan Mendez
+Ryan
 ### tests
-
+no testing info
 <a name="contact"></a>
 ## Contact
 ![Profile picture](https://avatars0.githubusercontent.com/u/64923446?v=4)
