@@ -62,7 +62,7 @@ const questions = [
 inquirer.prompt(questions).then(function (answers) {
   // axios get ot call the github api
     axios.get(
-        `https://api.github.com/users/${answers.gitHubUserName}?access_token=5020140fa87544c5c6a582eabb8ee5f19a7c2827`
+        `https://api.github.com/users/${answers.gitHubUserName}?access_token=`
     ).then(function (results) {
         // console.log(results.data)
         //variable declarations for gitHub response data
