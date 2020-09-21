@@ -30,6 +30,12 @@ const questions = [
         message: 'Please, describe how you install this product.',
     },
     {
+        type: "checkbox",
+        message: "Select a license badge:",
+        choices: ["NPM Inquirer", "Made With JS"],
+        name: "badge",
+    },
+    {
         type: 'input',
         name: 'Usage',
         message: 'Please, describe how you use this product.',
@@ -56,25 +62,43 @@ const questions = [
 inquirer.prompt(questions).then(function (answers) {
   // axios get ot call the github api
     axios.get(
-        `https://api.github.com/users/${answers.gitHubUserName}`
+        `https://api.github.com/users/${answers.gitHubUserName}?access_token=5020140fa87544c5c6a582eabb8ee5f19a7c2827`
     ).then(function (results) {
         // console.log(results.data)
         //variable declarations for gitHub response data
         const avatar_url = results.data.avatar_url
         const email = results.data.email
         answers.gitHub = {avatar_url:avatar_url,email:email}
-        // console.log(answers);
+        // console.log(answers.badge);
+        const badgeLicence = getBadge(answers.badge);
+        // console.log(badgeLicence);
         // declare a variable to later pass the generateMarkdown function to async Writefile
         const md = generateMarkDown(answers);
         // declare a variable to later pass the appendContact function to async Writefile
         const newMd = appendContact(answers.gitHub);
         // console.log(md + newMd);
-        writeFileAsync("README.md",md + newMd);
+        writeFileAsync("README1.md",badgeLicence + md + newMd);
 
     })
 })
     .catch(err => { console.log(err);}
     );
+
+// functon that get a badge for the readme
+function getBadge(answer) {
+    let badgeSelected =[]
+    for(let i = 0; i < answer.length; i++) {
+        if (answer[i] === 'Made With JS') {
+            badgeSelected.push('![MW JS](https://forthebadge.com/images/badges/made-with-javascript.svg)')
+        }
+        if (answer[i] === 'NPM Inquirer') {
+            badgeSelected.push('![NPM](https://img.shields.io/npm/l/inquirer?style=for-the-badge)');
+        }
+    }
+    return badgeSelected.join(' ');
+}
+
+
 // function that formats our markDownfile
 function generateMarkDown(answers) {
     return`
@@ -111,6 +135,7 @@ function appendContact(results) {
 <a name="contact"></a>
 ## Contact
 ![Profile picture](${results.avatar_url})
+#### for questions
 [Email me @ ${results.email}]`
 };
 
